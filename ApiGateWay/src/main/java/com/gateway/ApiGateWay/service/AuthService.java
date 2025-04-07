@@ -43,7 +43,7 @@ public class AuthService {
     public AuthResponse authenticate(AuthRequest request) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 
-        // Manually check password
+        // Manually check password --> db
         if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
             throw new RuntimeException("Invalid Credentials");
         }
@@ -54,7 +54,10 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .orElse("ROLE_USER");
 
+        System.out.println("Role is " + role);
+
         String token = jwtUtil.generateToken(userDetails.getUsername(), role);
+        System.out.println("token is generated "+token);
         return new AuthResponse(token);
     }
 }

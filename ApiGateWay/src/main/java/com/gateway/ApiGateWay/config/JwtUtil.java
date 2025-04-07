@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = Base64.getEncoder().encodeToString("your_secret_key_at_least_32_chars".getBytes());
+    private static final String SECRET_KEY = Base64.getEncoder().encodeToString("\"your_real_secret_key_which_is_secure_123456".getBytes());
 
 
     private Key getSigningKey() {
@@ -28,8 +28,10 @@ public class JwtUtil {
 
     public String extractRole(String token) {
         String role = extractClaim(token, claims -> claims.get("role", String.class));
-        return role.replace("ROLE_", ""); // ✅ Remove "ROLE_" prefix for proper authorization
+        System.out.println("Extract Role: " + role.trim());
+        return role;
     }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -47,7 +49,7 @@ public class JwtUtil {
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", "ROLE_" + role) // Add "ROLE_" prefix
+                .claim("role", role.trim().toUpperCase())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -55,11 +57,13 @@ public class JwtUtil {
     }
 
     public boolean isTokenValid(String token, String username) {
-        final String extractedUsername = extractUsername(token);
+        System.out.println("is token valid --> ");
+         String extractedUsername = extractUsername(token);
         return extractedUsername.equals(username) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
+        System.out.println("---> is token exprired ");
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 }
