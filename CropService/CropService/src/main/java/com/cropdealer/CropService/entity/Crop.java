@@ -10,19 +10,33 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cropsNEW")
+
 public class Crop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long cropId;
 
     @NotNull(message = "Farmer ID cannot be null")
     @Column(nullable = false)
-    private Long farmerID;
+    private Long farmerId;
+
+//    @NotNull(message = "Farmer Email cannot be null")
+//    @Column(nullable = false)
+//    private String farmerEmail;
+
+    @NotNull(message = "Crop type cannot be null")
+    @Column(nullable = false)
+    private String cropName;
 
     @NotNull(message = "Crop type cannot be null")
     @Column(nullable = false)
     private String cropType;
+
+
+    @NotNull(message = "Crop type cannot be null")
+    @Column(nullable = false)
+    private long price;
 
     @NotNull(message = "Quantity cannot be null")
     @Column(nullable = false)

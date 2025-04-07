@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CropRepository extends JpaRepository<Crop , Long> {
-    List<Crop> findByFarmerID(Long farmerID);
+    List<Crop> findByFarmerId(Long farmerId);
+    List<Crop> findByCropId(Long cropId);
 
 }

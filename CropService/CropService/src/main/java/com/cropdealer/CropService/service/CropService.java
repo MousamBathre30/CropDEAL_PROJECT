@@ -28,8 +28,10 @@ public class CropService {
         log.info("Received Crop Data: {}", cropDTO);
 
         Crop crop = new Crop();
-        crop.setFarmerID(cropDTO.getFarmerID());
+        crop.setFarmerId(cropDTO.getFarmerId());
+        crop.setCropName(cropDTO.getCropName());
         crop.setCropType(cropDTO.getCropType());
+        crop.setPrice(cropDTO.getPrice());
         crop.setQuantity(cropDTO.getQuantity());
         crop.setLocation(cropDTO.getLocation());
 
@@ -43,7 +45,11 @@ public class CropService {
         return cropRepository.findAll();
     }
 
-    public List<Crop> getCropsByFarmer(Long farmerID) {
-        return cropRepository.findByFarmerID(farmerID);
+    public List<Crop> getCropsByFarmer(Long farmerId) {
+        return cropRepository.findByFarmerId(farmerId);
+    }
+
+    public List<Crop> getCropsByCropID(Long id){
+        return cropRepository.findByCropId(id);
     }
 }

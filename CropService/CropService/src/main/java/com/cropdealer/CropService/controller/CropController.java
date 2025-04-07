@@ -36,14 +36,28 @@ public class CropController {
         return ResponseEntity.ok(crops);
     }
 
+
     @GetMapping("/message")
     public ResponseEntity<String> message() {
         return ResponseEntity.ok("Crop service is working");
     }
 
-    @GetMapping("/farmer/{farmerID}")
-    public ResponseEntity<List<Crop>> getCropsByFarmer(@PathVariable Long farmerID) {
-        List<Crop> crops = cropService.getCropsByFarmer(farmerID);
-        return ResponseEntity.ok(crops);
+    @GetMapping("/cropId/{cropId}")
+    public ResponseEntity<List<CropDTO>> getCropById(@PathVariable Long cropId){
+        List<Crop> savedCrop = cropService.getCropsByCropID(cropId);
+        List<CropDTO> cropDTOs = savedCrop.stream().map(this::convertToDTO).toList();
+        return ResponseEntity.ok(cropDTOs); // ✅ Correct
     }
+
+    private CropDTO convertToDTO(Crop crop) {
+        CropDTO dto = new CropDTO();
+        dto.setFarmerId(crop.getFarmerId());
+        dto.setCropName(crop.getCropName());
+        dto.setCropType(crop.getCropType());
+        dto.setPrice(crop.getPrice());
+        dto.setQuantity(crop.getQuantity());
+        dto.setLocation(crop.getLocation());
+        return dto;
+    }
+
 }
