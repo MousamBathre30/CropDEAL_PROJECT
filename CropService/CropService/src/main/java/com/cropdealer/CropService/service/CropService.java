@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class CropService {
     @Autowired
     private  CropRepository cropRepository;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
 
     public Crop addCrop(CropDTO cropDTO) {
         log.info("Received Crop Data: {}", cropDTO);
@@ -38,6 +42,8 @@ public class CropService {
         Crop savedCrop = cropRepository.save(crop);
         log.info("Saved Crop: {}", savedCrop);
 
+        String message = "Farmer ID " + crop.getFarmerId() + " added a new crop";
+        rabbitTemplate.convertAndSend("cropdeal-exchange", "crop.added", message);
         return savedCrop;
     }
 
@@ -52,4 +58,21 @@ public class CropService {
     public List<Crop> getCropsByCropID(Long id){
         return cropRepository.findByCropId(id);
     }
+
+    public void deleteCropbyid(Long id){
+        cropRepository.deleteById(id);
+    }
+
+    public Crop updateCrop(Long id, CropDTO updatedCrop) {
+        return cropRepository.findById(id).map(crop -> {
+            crop.setCropName(updatedCrop.getCropName());
+            crop.setPrice(updatedCrop.getPrice());
+            crop.setCropType(updatedCrop.getCropType());
+            crop.setFarmerId(updatedCrop.getFarmerId());
+            crop.setQuantity(updatedCrop.getQuantity());
+            crop.setLocation(updatedCrop.getLocation());
+            return cropRepository.save(crop);
+        }).orElseThrow(() -> new RuntimeException("Crop not found with id " + id));
+    }
+
 }

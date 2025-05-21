@@ -36,6 +36,21 @@ public class CropController {
         return ResponseEntity.ok(crops);
     }
 
+    @DeleteMapping("/Delete/{cropId}")
+    public ResponseEntity<String> deleteCropbyId(@PathVariable Long cropId){
+        cropService.deleteCropbyid(cropId);
+        return  ResponseEntity.ok("Succfully Delete the crop of CropId");
+    }
+
+    @PutMapping("/update{cropId}")
+    public ResponseEntity<Crop> updateCrop(@PathVariable Long cropId , @RequestBody CropDTO cropDTO) {
+        logger.info("Update Crop Data: {}", cropDTO);
+
+        Crop savedCrop = cropService.updateCrop(cropId , cropDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCrop);
+    }
+
 
     @GetMapping("/message")
     public ResponseEntity<String> message() {
@@ -46,8 +61,10 @@ public class CropController {
     public ResponseEntity<List<CropDTO>> getCropById(@PathVariable Long cropId){
         List<Crop> savedCrop = cropService.getCropsByCropID(cropId);
         List<CropDTO> cropDTOs = savedCrop.stream().map(this::convertToDTO).toList();
+        logger.info("Get  Crop Data: {}", cropDTOs);
         return ResponseEntity.ok(cropDTOs); // ✅ Correct
     }
+
 
     private CropDTO convertToDTO(Crop crop) {
         CropDTO dto = new CropDTO();
