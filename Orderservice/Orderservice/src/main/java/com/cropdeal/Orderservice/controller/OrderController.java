@@ -37,7 +37,7 @@ public class OrderController {
     /*
     --> this api is used to get all order by particular dealer.
      */
-    @GetMapping("/dealer/{dealerId}")
+    @PostMapping("/dealer/{dealerId}")
     public List<Order> getOrdersByDealerId(@PathVariable Long dealerId) {
         return orderService.getOrdersByDealerId(dealerId);
     }
@@ -56,7 +56,7 @@ public class OrderController {
     /*
      --> see the status
      */
-    @PutMapping("/{orderId}/status")
+    @PutMapping("/{orderId}/{status}")
     public Order updateOrderStatus(@PathVariable Long orderId, @RequestParam String status) {
         return orderService.updateOrderStatus(orderId, status);
     }

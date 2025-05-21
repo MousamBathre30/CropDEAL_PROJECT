@@ -6,6 +6,7 @@ import com.cropdeal.Orderservice.feignclient.CropClient;
 import com.cropdeal.Orderservice.repo.OrderRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private CropClient cropClient;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
 
     @Override
@@ -44,6 +47,8 @@ public class OrderServiceImpl implements OrderService{
         order.setCropType(crop.getCropType());
         order.setStatus("Pending");
 
+        String notifyMessage = "Dealer " + order.getDealerId() + " ordered Crop ID " + order.getCropId();
+        rabbitTemplate.convertAndSend("cropdeal-exchange", "order.placed", notifyMessage);
         return orderRepository.save(order);
     }
 
@@ -99,6 +104,9 @@ public class OrderServiceImpl implements OrderService{
             order.setStatus("Completed");
             orderRepository.save(order);
         }
+
+        String confirmationMessage = "You placed the order for Crop ID " + order.getCropId();
+        rabbitTemplate.convertAndSend("cropdeal-exchange", "order.confirmation", confirmationMessage);
 
     }
 }
