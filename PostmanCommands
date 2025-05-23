@@ -1,0 +1,57 @@
+{{BASE_API_GATEWAY}}/api/crops/message   -> /getMessageCROP
+{{BASE_API_GATEWAY}}/api/orders           -> /getMessageORDER
+{{BASE_API_GATEWAY}}/auth/login           -> LOGIN
+{{BASE_API_GATEWAY}}/auth/register         ->  Register
+{{BASE_API_GATEWAY}}/api/crops/message      -> API-CROPS
+{{BASE_API_GATEWAY}}/api/crops       ->    GET-CROP
+{{BASE_API_GATEWAY}}/api/crops/message   -> GET-CROP-MEssage
+http://localhost:8084/swagger-ui.html    -> swaggerRequest
+
+
+------------------------  CROP ---------------------------------------------------
+
+
+GET-ALL-CROPS -> http://localhost:8081/crops
+GET-CROP-FARMERID -> http://localhost:8081/crops/farmer/10002
+Message -> http://localhost:8081/crops/message
+get by id -> http://localhost:8081/crops/cropId/1 
+
+-------------------- Order Servicer ----------------------------------------------
+
+GET-MESSAGE -> http://localhost:8082/orders
+Place_Order -> http://localhost:8082/orders/placeOrder
+Get-Order-ByDealerID -> http://localhost:8082/orders/dealer/{dealerId} 
+seeInfromation -> http://localhost:8082/orders/{orderId} 
+Check_BY_STATUS -> http://localhost:8082/orders/{orderId}/status 
+Delete_By_OrderId -> http://localhost:8082/orders/{orderId} 
+CHECKALLADMIN -> http://localhost:8082/orders/all 
+
+
+
+-------------   Payment service -------------------------------------------
+
+http://localhost:8080/api/payments/process 
+http://localhost:8080/api/payments/process/1/123456 
+http://localhost:8080/api/payments/message 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
